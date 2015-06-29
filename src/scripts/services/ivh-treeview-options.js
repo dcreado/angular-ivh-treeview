@@ -94,7 +94,7 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
         '<span ivh-treeview-toggle>',
           '<span ivh-treeview-twistie></span>',
         '</span>',
-        '<span ng-if="trvw.useCheckboxes()"',
+        '<span ng-if="trvw.useCheckboxes(node)"',
             'ivh-treeview-checkbox>',
         '</span>',
         '<span class="ivh-treeview-node-label" ivh-treeview-toggle>',

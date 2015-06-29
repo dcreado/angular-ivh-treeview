@@ -23,11 +23,12 @@ angular.module('ivh.treeview').directive('ivhTreeviewCheckboxHelper', [function(
 
       // Set initial selected state of this checkbox
       scope.isSelected = node[selectedAttr];
+      scope.isSelectable = trvw.isSelectable(node);
 
       // Local access to the parent controller
       scope.trvw = trvw;
 
-      // Update the checkbox when the node's selected status changes
+        // Update the checkbox when the node's selected status changes
       scope.$watch(function() {
         return node[selectedAttr];
       }, function(newVal, oldVal) {
@@ -48,4 +49,3 @@ angular.module('ivh.treeview').directive('ivhTreeviewCheckboxHelper', [function(
     ].join('\n')
   };
 }]);
-

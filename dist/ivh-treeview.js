@@ -32,11 +32,12 @@ angular.module('ivh.treeview').directive('ivhTreeviewCheckboxHelper', [function(
 
       // Set initial selected state of this checkbox
       scope.isSelected = node[selectedAttr];
+      scope.isSelectable = trvw.isSelectable(node);
 
       // Local access to the parent controller
       scope.trvw = trvw;
 
-      // Update the checkbox when the node's selected status changes
+        // Update the checkbox when the node's selected status changes
       scope.$watch(function() {
         return node[selectedAttr];
       }, function(newVal, oldVal) {
@@ -57,7 +58,6 @@ angular.module('ivh.treeview').directive('ivhTreeviewCheckboxHelper', [function(
     ].join('\n')
   };
 }]);
-
 
 
 /**
@@ -302,6 +302,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       labelAttribute: '=ivhTreeviewLabelAttribute',
       nodeTpl: '=ivhTreeviewNodeTpl',
       selectedAttribute: '=ivhTreeviewSelectedAttribute',
+      selectableAttribute: '=ivhTreeviewSelectableAttribute',
       twistieCollapsedTpl: '=ivhTreeviewTwistieCollapsedTpl',
       twistieExpandedTpl: '=ivhTreeviewTwistieExpandedTpl',
       twistieLeafTpl: '=ivhTreeviewTwistieLeafTpl',
@@ -334,6 +335,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
         'labelAttribute',
         'nodeTpl',
         'selectedAttribute',
+        'selectableAttribute',
         'twistieCollapsedTpl',
         'twistieExpandedTpl',
         'twistieLeafTpl',
@@ -462,8 +464,8 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        *
        * @return {Boolean} Whether or not to use checkboxes
        */
-      trvw.useCheckboxes = function() {
-        return localOpts.useCheckboxes;
+      trvw.useCheckboxes = function(node) {
+        return localOpts.useCheckboxes && trvw.isSelectable(node);
       };
 
       /**
@@ -491,6 +493,19 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       };
 
       /**
+       * Get if the `node` is selectable
+       *
+       * @param {Object} node The node to get the selected state of
+       * @return {Boolean} `true` if `node` is selected
+       */
+      trvw.isSelectable = function(node) {
+        if(localOpts.selectableAttribute) {
+          return node[localOpts.selectableAttribute];
+        }
+        return true;
+      };
+
+      /**
        * Toggle the selected state of `node`
        *
        * Updates parent and child node selected states appropriately.
@@ -498,8 +513,10 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        * @param {Object} node The node to update
        */
       trvw.toggleSelected = function(node) {
-        var isSelected = !node[localOpts.selectedAttribute];
-        trvw.select(node, isSelected);
+        if(trvw.isSelectable(node)) {
+          var isSelected = !node[localOpts.selectedAttribute];
+          trvw.select(node, isSelected);
+        }
       };
 
       /**
@@ -614,7 +631,6 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
     ].join('\n')
   };
 }]);
-
 
 
 angular.module('ivh.treeview').filter('ivhTreeviewAsArray', function() {
@@ -1288,7 +1304,7 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
         '<span ivh-treeview-toggle>',
           '<span ivh-treeview-twistie></span>',
         '</span>',
-        '<span ng-if="trvw.useCheckboxes()"',
+        '<span ng-if="trvw.useCheckboxes(node)"',
             'ivh-treeview-checkbox>',
         '</span>',
         '<span class="ivh-treeview-node-label" ivh-treeview-toggle>',

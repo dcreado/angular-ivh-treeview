@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="../dist/ivh-treeview.css">
+  <link rel="stylesheet" href="../dist/ivh-treeview-theme-basic.css">
+  <meta charset="utf-8">
+  <title>Angular JS</title>
+</head>
+<body ng-app="jsbin">
+  <div class="container">
+    <div ng-controller="DemoCtrl as demo">
+      <h1>Hello World!</h1>
+      <p class="alert alert-info">
+        The <strong>ivh.treeview</strong> module provides a directive for rendering tree-like collections. It supports checkboxes and deep filtering. By default we use basic (+)/(-) for twisties but that's all configurable.
+      </p>
+      <input type="text" ng-model="bagSearch" class="form-control" placeholder="Find stuff in your bag..." style="">
+      <div ivh-treeview="demo.bag"
+           ivh-treeview-filter="bagSearch"
+           ivh-treeview-selectable-attribute="'selectable'"
+           ivh-treeview-expand-to-depth="1"></div>
+    </div>
+  </div>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular.js"></script>
+
+  <script src="../src/scripts/module.js"></script>
+  <script src="../src/scripts/directives/ivh-treeview-checkbox-helper.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview-checkbox.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview-children.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview-node.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview-toggle.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview-twistie.js"></script>
+  <script src="../src/scripts//directives/ivh-treeview.js"></script>
+  <script src="../src/scripts//filters/ivh-treeview-as-array.js"></script>
+  <script src="../src/scripts//services/ivh-treeview-bfs.js"></script>
+  <script src="../src/scripts//services/ivh-treeview-compiler.js"></script>
+  <script src="../src/scripts//services/ivh-treeview-mgr.js"></script>
+  <script src="../src/scripts//services/ivh-treeview-options.js"></script>
+
+  <script src="index.js"></script>
+</body>
+</html>

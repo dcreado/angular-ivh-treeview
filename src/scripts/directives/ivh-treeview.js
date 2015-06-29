@@ -38,6 +38,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       labelAttribute: '=ivhTreeviewLabelAttribute',
       nodeTpl: '=ivhTreeviewNodeTpl',
       selectedAttribute: '=ivhTreeviewSelectedAttribute',
+      selectableAttribute: '=ivhTreeviewSelectableAttribute',
       twistieCollapsedTpl: '=ivhTreeviewTwistieCollapsedTpl',
       twistieExpandedTpl: '=ivhTreeviewTwistieExpandedTpl',
       twistieLeafTpl: '=ivhTreeviewTwistieLeafTpl',
@@ -70,6 +71,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
         'labelAttribute',
         'nodeTpl',
         'selectedAttribute',
+        'selectableAttribute',
         'twistieCollapsedTpl',
         'twistieExpandedTpl',
         'twistieLeafTpl',
@@ -198,8 +200,8 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        *
        * @return {Boolean} Whether or not to use checkboxes
        */
-      trvw.useCheckboxes = function() {
-        return localOpts.useCheckboxes;
+      trvw.useCheckboxes = function(node) {
+        return localOpts.useCheckboxes && trvw.isSelectable(node);
       };
 
       /**
@@ -227,6 +229,19 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       };
 
       /**
+       * Get if the `node` is selectable
+       *
+       * @param {Object} node The node to get the selected state of
+       * @return {Boolean} `true` if `node` is selected
+       */
+      trvw.isSelectable = function(node) {
+        if(localOpts.selectableAttribute) {
+          return node[localOpts.selectableAttribute];
+        }
+        return true;
+      };
+
+      /**
        * Toggle the selected state of `node`
        *
        * Updates parent and child node selected states appropriately.
@@ -234,8 +249,10 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        * @param {Object} node The node to update
        */
       trvw.toggleSelected = function(node) {
-        var isSelected = !node[localOpts.selectedAttribute];
-        trvw.select(node, isSelected);
+        if(trvw.isSelectable(node)) {
+          var isSelected = !node[localOpts.selectedAttribute];
+          trvw.select(node, isSelected);
+        }
       };
 
       /**
@@ -350,4 +367,3 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
     ].join('\n')
   };
 }]);
-

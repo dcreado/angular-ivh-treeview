@@ -35,6 +35,7 @@ angular.module('ivh.treeview')
         , indeterminateAttr = this.indeterminateAttribute
         , numSelected = 0
         , numIndeterminate = 0;
+
       ng.forEach(children, function(n, ix) {
         if(n[selectedAttr]) {
           numSelected++;
@@ -49,12 +50,14 @@ angular.module('ivh.treeview')
         node[selectedAttr] = false;
         node[indeterminateAttr] = false;
       } else if(numSelected === children.length) {
-        node[selectedAttr] = true;
-        node[indeterminateAttr] = false;
+        //node[selectedAttr] = true;
+        node[selectedAttr] = false;
+        node[indeterminateAttr] = true;
       } else {
         node[selectedAttr] = false;
         node[indeterminateAttr] = true;
       }
+
     };
 
     var findNode = function(tree, node, opts, cb) {
@@ -125,7 +128,8 @@ angular.module('ivh.treeview')
             makeSelected.bind(opts) :
             makeDeselected.bind(opts);
 
-          ivhTreeviewBfs(n, opts, cb);
+          ivhTreeviewBfs(n, opts, makeDeselected.bind(opts));
+          cb.call(opts, n);
           ng.forEach(p, validateParent.bind(opts));
         }
 

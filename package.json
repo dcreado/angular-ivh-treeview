@@ -37,5 +37,8 @@
     "grunt-contrib-cssmin": "^0.10.0",
     "grunt-contrib-jasmine": "^0.6.5",
     "grunt-jscs": "^1.8.0"
+  },
+  "dependencies": {
+    "which": "^1.1.1"
   }
 }
