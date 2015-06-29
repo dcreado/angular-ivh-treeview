@@ -32,6 +32,9 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
      */
     selectedAttribute: 'selected',
 
+
+    selectableAttribute: 'selectable',
+
     /**
      * Controls whether branches are initially expanded or collapsed
      *
@@ -55,6 +58,8 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
      * Must opt-in.
      */
     validate: false,
+
+    singleSelect: false,
 
     /**
      * (internal) Collection item attribute to track intermediate states

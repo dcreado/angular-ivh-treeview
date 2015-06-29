@@ -101,7 +101,7 @@ angular.module('ivh.treeview')
      * @param {Boolean} isSelected [optional] Whether or not to select `node`, defaults to `true`
      * @return {Object} Returns the ivhTreeviewMgr instance for chaining
      */
-    exports.select = function(tree, node, opts, isSelected) {
+    exports.select = function(tree, node, opts, isSelected, wipeSelection) {
       if(arguments.length > 2) {
         if(typeof opts === 'boolean') {
           isSelected = opts;
@@ -114,7 +114,9 @@ angular.module('ivh.treeview')
       var useId = ng.isString(node)
         , proceed = true
         , idAttr = opts.idAttribute;
-
+      if(wipeSelection){
+        ivhTreeviewBfs(tree, opts, makeDeselected.bind(opts));
+      }
       ivhTreeviewBfs(tree, opts, function(n, p) {
         var isNode = proceed && (useId ?
           node === n[idAttr] :

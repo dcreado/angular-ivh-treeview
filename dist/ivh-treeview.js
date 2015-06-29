@@ -309,6 +309,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       useCheckboxes: '=ivhTreeviewUseCheckboxes',
       validate: '=ivhTreeviewValidate',
       visibleAttribute: '=ivhTreeviewVisibleAttribute',
+      singleSelect: '=ivhTreeviewSingleSelect',
 
       // Generic options object
       userOptions: '=ivhTreeviewOptions',
@@ -341,7 +342,8 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
         'twistieLeafTpl',
         'useCheckboxes',
         'validate',
-        'visibleAttribute'
+        'visibleAttribute',
+        'singleSelect'
       ], function(attr) {
         if(ng.isDefined($scope[attr])) {
           localOpts[attr] = $scope[attr];
@@ -478,7 +480,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        * @param {Boolean} isSelected Defaults to `true`
        */
       trvw.select = function(node, isSelected) {
-        ivhTreeviewMgr.select($scope.root, node, localOpts, isSelected);
+        ivhTreeviewMgr.select($scope.root, node, localOpts, isSelected, localOpts.singleSelect);
         trvw.onNodeChange(node, isSelected);
       };
 
@@ -870,7 +872,7 @@ angular.module('ivh.treeview')
      * @param {Boolean} isSelected [optional] Whether or not to select `node`, defaults to `true`
      * @return {Object} Returns the ivhTreeviewMgr instance for chaining
      */
-    exports.select = function(tree, node, opts, isSelected) {
+    exports.select = function(tree, node, opts, isSelected, wipeSelection) {
       if(arguments.length > 2) {
         if(typeof opts === 'boolean') {
           isSelected = opts;
@@ -883,7 +885,9 @@ angular.module('ivh.treeview')
       var useId = ng.isString(node)
         , proceed = true
         , idAttr = opts.idAttribute;
-
+      if(wipeSelection){
+        ivhTreeviewBfs(tree, opts, makeDeselected.bind(opts));
+      }
       ivhTreeviewBfs(tree, opts, function(n, p) {
         var isNode = proceed && (useId ?
           node === n[idAttr] :
@@ -1246,6 +1250,9 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
      */
     selectedAttribute: 'selected',
 
+
+    selectableAttribute: 'selectable',
+
     /**
      * Controls whether branches are initially expanded or collapsed
      *
@@ -1269,6 +1276,8 @@ angular.module('ivh.treeview').provider('ivhTreeviewOptions', function() {
      * Must opt-in.
      */
     validate: false,
+
+    singleSelect: false,
 
     /**
      * (internal) Collection item attribute to track intermediate states

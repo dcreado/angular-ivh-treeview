@@ -45,6 +45,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
       useCheckboxes: '=ivhTreeviewUseCheckboxes',
       validate: '=ivhTreeviewValidate',
       visibleAttribute: '=ivhTreeviewVisibleAttribute',
+      singleSelect: '=ivhTreeviewSingleSelect',
 
       // Generic options object
       userOptions: '=ivhTreeviewOptions',
@@ -77,7 +78,8 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
         'twistieLeafTpl',
         'useCheckboxes',
         'validate',
-        'visibleAttribute'
+        'visibleAttribute',
+        'singleSelect'
       ], function(attr) {
         if(ng.isDefined($scope[attr])) {
           localOpts[attr] = $scope[attr];
@@ -214,7 +216,7 @@ angular.module('ivh.treeview').directive('ivhTreeview', ['ivhTreeviewMgr', funct
        * @param {Boolean} isSelected Defaults to `true`
        */
       trvw.select = function(node, isSelected) {
-        ivhTreeviewMgr.select($scope.root, node, localOpts, isSelected);
+        ivhTreeviewMgr.select($scope.root, node, localOpts, isSelected, localOpts.singleSelect);
         trvw.onNodeChange(node, isSelected);
       };
 
